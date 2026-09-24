@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title or "ระบบร้านซ่อม" }}</title><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"></head>
+<body><header><div class="top"><a href="{{ url_for('index') }}" class="logo">🔧 ร้านซ่อม</a><span>ระบบจัดการร้านซ่อมอุปกรณ์</span></div></header>
+<main>{% with messages=get_flashed_messages(with_categories=true) %}{% for cat,msg in messages %}<div class="msg {{cat}}">{{msg}}</div>{% endfor %}{% endwith %}{% block content %}{% endblock %}</main>
+</body></html>

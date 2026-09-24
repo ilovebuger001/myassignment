@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<section class="hero"><h1>ระบบจัดการร้านซ่อม</h1><p>ฐานข้อมูล SQLite สำหรับร้านซ่อมอุปกรณ์อิเล็กทรอนิกส์และเครื่องใช้ไฟฟ้า</p></section>
+<div class="grid">{% for key,(name,cols) in tables.items() %}<a class="card" href="{{url_for('table_view',table=key)}}"><b>{{name}}</b><small>{{key}}</small><strong>{{counts[key]}}</strong><span>รายการ</span></a>{% endfor %}</div>
+<p class="hint">ต้องการเพิ่มข้อมูล? เปิดตารางที่ต้องการแล้วกด “เพิ่มข้อมูล”</p>
+{% endblock %}

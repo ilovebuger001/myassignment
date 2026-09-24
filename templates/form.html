@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% block content %}
+<div class="formbox">
+  <h1>{% if mode == 'edit' %}แก้ไข{% else %}เพิ่ม{% endif %}{{ title }}</h1>
+  <p>กรอกข้อมูลให้ครบตามโครงสร้างฐานข้อมูล</p>
+  <form method="post">
+    {% for key, label, required, ftype, options in fields %}
+    <label>
+      {{ label }}{% if required %} <span class="req">*</span>{% endif %}
+      {% if ftype == 'date' %}
+        <input name="{{ key }}" type="date" {% if required %}required{% endif %} value="{{ row[key] if row and row[key] else '' }}">
+      {% elif ftype == 'decimal' %}
+        <input name="{{ key }}" type="number" step="0.01" {% if required %}required{% endif %} value="{{ row[key] if row and row[key] else '' }}">
+      {% elif ftype == 'number' %}
+        <input name="{{ key }}" type="number" min="0" {% if required %}required{% endif %} value="{{ row[key] if row and row[key] else '' }}">
+      {% elif ftype == 'select' %}
+        <select name="{{ key }}" {% if required %}required{% endif %}>
+          {% if not required %}<option value="">-- เลือก --</option>{% endif %}
+          {% for opt in options %}
+          <option value="{{ opt }}" {% if row and row[key] == opt %}selected{% endif %}>{{ opt }}</option>
+          {% endfor %}
+        </select>
+      {% else %}
+        <input name="{{ key }}" type="text" {% if required %}required{% endif %} value="{{ row[key] if row and row[key] else '' }}" {% if mode == 'edit' and key in pks %}readonly{% endif %}>
+      {% endif %}
+    </label>
+    {% endfor %}
+    <div class="form-actions">
+      <button class="btn primary" type="submit">บันทึกข้อมูล</button>
+      <a class="btn" href="{{ url_for('table_view', table=table) }}">ยกเลิก</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

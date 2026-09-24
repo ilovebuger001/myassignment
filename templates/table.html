@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% block content %}
+<div class="bar">
+  <div><h1>{{title}}</h1><small>{{table}}</small></div>
+  <div>
+    <a class="btn" href="{{ url_for('index') }}">หน้าแรก</a>
+    <a class="btn primary" href="{{ url_for('add', table=table) }}">+ เพิ่มข้อมูล</a>
+  </div>
+</div>
+<div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        {% for c in columns %}<th>{{ c }}</th>{% endfor %}
+        <th class="action-col">จัดการ</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        {% for c in columns %}<td>{{ r[c] if r[c] is not none else '-' }}</td>{% endfor %}
+        <td class="action-col">
+          {% set pk_path = pks | map(attribute=0) | map('extract', r) | join('/') if false else [] %}
+          {% set pk_parts = [] %}
+          {% for pk in pks %}{% set _ = pk_parts.append(r[pk]) %}{% endfor %}
+          {% set pk_path = pk_parts | join('/') %}
+          <a class="btn btn-sm" href="{{ url_for('edit', table=table, pk_vals=pk_path) }}">แก้ไข</a>
+          <form method="post" action="{{ url_for('delete', table=table, pk_vals=pk_path) }}" style="display:inline" onsubmit="return confirm('ยืนยันการลบ?')">
+            <button class="btn btn-sm danger" type="submit">ลบ</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="{{ columns|length + 1 }}">ยังไม่มีข้อมูล</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
